@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonar AI Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="https://i.postimg.cc/LsxX0p4L/cropped-circle-image.png" alt="Sonar Logo" class="logo">
+                    <h2>Sonar AI</h2>
+                </div>
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i>
+                    New Chat
+                </button>
+            </div>
+            
+            <div class="chat-history" id="chatHistory">
+                <!-- Chat history will be populated here -->
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="model-selector">
+                    <label for="modelSelect">AI Model:</label>
+                    <select id="modelSelect" class="model-dropdown">
+                        <option value="sonar(clinesp)">Sonar (Clinesp)</option>
+                        <option value="groq/moonshotai/kimi-k2-instruct">Kimi K2 Instruct</option>
+                        <option value="sonar-reasoning-pro(clinesp)">Sonar Reasoning Pro</option>
+                        <option value="sonar-reasoning(clinesp)">Sonar Reasoning</option>
+                    </select>
+                </div>
+                <button class="settings-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="main-content">
+            <div class="chat-header">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info" id="userInfo">
+                    <span id="userEmail">Not logged in</span>
+                    <button class="login-btn" id="loginBtn">Login</button>
+                </div>
+            </div>
+
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-message" id="welcomeMessage">
+                    <div class="welcome-content">
+                        <img src="https://i.postimg.cc/LsxX0p4L/cropped-circle-image.png" alt="Sonar Logo" class="welcome-logo">
+                        <h1>Welcome to Sonar AI</h1>
+                        <p>Your intelligent AI assistant powered by advanced language models</p>
+                        <div class="model-info">
+                            <p>Current Model: <span id="currentModel">Sonar (Clinesp)</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will be populated here -->
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Message Sonar AI..." 
+                        rows="1"
+                        maxlength="4000"
+                    ></textarea>
+                    <button id="sendBtn" class="send-btn" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span class="char-count" id="charCount">0/4000</span>
+                    <span class="disclaimer">Sonar AI can make mistakes. Consider checking important information.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>Generating response...</p>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
