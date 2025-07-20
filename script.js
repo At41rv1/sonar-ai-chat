@@ -1,6 +1,6 @@
 class At41rvChat {
     constructor() {
-        this.currentModel = "gpt-4o-search-preview(clinesp)";
+        this.currentModel = "chatgpt-4o-latest(clinesp)";
         this.messages = [];
         this.chatHistory = [];
         this.currentChatId = null;
@@ -28,7 +28,7 @@ class At41rvChat {
         // Group models by category
         const modelCategories = {
             'GPT Models': [
-                'gpt-4o-search-preview(clinesp)',
+                'chatgpt-4o-latest(clinesp)',
                 'chatgpt-4o-latest(clinesp)',
                 'gpt-4(clinesp)',
                 'gpt-4-turbo(clinesp)',
