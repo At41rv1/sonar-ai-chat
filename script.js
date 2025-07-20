@@ -1,6 +1,6 @@
-class SonarChat {
+class At41rvChat {
     constructor() {
-        this.currentModel = "sonar(clinesp)";
+        this.currentModel = "gpt-4o-search-preview(clinesp)";
         this.messages = [];
         this.chatHistory = [];
         this.currentChatId = null;
@@ -13,9 +13,95 @@ class SonarChat {
         this.setupEventListeners();
         this.loadChatHistory();
         this.updateModelDisplay();
+        this.populateModelGrid();
         
         // Auto-resize textarea
         this.setupTextareaResize();
+    }
+
+    populateModelGrid() {
+        const modelGrid = document.getElementById('modelGrid');
+        if (!modelGrid) return;
+        
+        modelGrid.innerHTML = '';
+
+        // Group models by category
+        const modelCategories = {
+            'GPT Models': [
+                'gpt-4o-search-preview(clinesp)',
+                'chatgpt-4o-latest(clinesp)',
+                'gpt-4(clinesp)',
+                'gpt-4-turbo(clinesp)',
+                'gpt-4.1(clinesp)',
+                'gpt-4.1-mini(clinesp)',
+                'gpt-4.1-nano(clinesp)'
+            ],
+            'Claude Models': [
+                'claude-3.5-sonnet(clinesp)',
+                'claude-3.5-haiku(clinesp)',
+                'claude-3.7-sonnet(clinesp)',
+                'claude-opus-4(clinesp)',
+                'claude-sonnet-4(clinesp)'
+            ],
+            'Grok Models': [
+                'grok-3(clinesp)',
+                'grok-3-beta(clinesp)',
+                'grok-3-mini(clinesp)',
+                'Paid/xai/grok-4'
+            ]
+        };
+
+        // Create model cards for each category
+        Object.entries(modelCategories).forEach(([category, models]) => {
+            models.forEach(modelKey => {
+                if (API_CONFIG.MODELS[modelKey]) {
+                    const modelCard = document.createElement('div');
+                    modelCard.className = 'model-card';
+                    modelCard.dataset.model = modelKey;
+                    
+                    if (modelKey === this.currentModel) {
+                        modelCard.classList.add('active');
+                    }
+
+                    const modelName = API_CONFIG.MODELS[modelKey];
+                    const provider = this.getModelProvider(modelKey);
+
+                    modelCard.innerHTML = `
+                        <div class="model-name">${modelName}</div>
+                        <div class="model-provider">${provider}</div>
+                    `;
+
+                    modelCard.addEventListener('click', () => {
+                        this.selectModel(modelKey);
+                    });
+
+                    modelGrid.appendChild(modelCard);
+                }
+            });
+        });
+    }
+
+    getModelProvider(modelKey) {
+        if (modelKey.includes('gpt') || modelKey.includes('chatgpt')) return 'OpenAI';
+        if (modelKey.includes('claude')) return 'Anthropic';
+        if (modelKey.includes('grok')) return 'xAI';
+        return 'AI Provider';
+    }
+
+    selectModel(modelKey) {
+        this.currentModel = modelKey;
+        this.updateModelDisplay();
+        this.updateModelGrid();
+    }
+
+    updateModelGrid() {
+        const modelCards = document.querySelectorAll('.model-card');
+        modelCards.forEach(card => {
+            card.classList.remove('active');
+            if (card.dataset.model === this.currentModel) {
+                card.classList.add('active');
+            }
+        });
     }
 
     setupEventListeners() {
@@ -23,58 +109,69 @@ class SonarChat {
         const sendBtn = document.getElementById('sendBtn');
         const messageInput = document.getElementById('messageInput');
         
-        sendBtn.addEventListener('click', () => this.sendMessage());
-        messageInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                this.sendMessage();
-            }
-        });
+        if (sendBtn) {
+            sendBtn.addEventListener('click', () => this.sendMessage());
+        }
+        
+        if (messageInput) {
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.sendMessage();
+                }
+            });
 
-        // Character count
-        messageInput.addEventListener('input', () => {
-            this.updateCharCount();
-            this.toggleSendButton();
-        });
-
-        // Model selection
-        const modelSelect = document.getElementById('modelSelect');
-        modelSelect.addEventListener('change', (e) => {
-            this.currentModel = e.target.value;
-            this.updateModelDisplay();
-        });
+            // Character count
+            messageInput.addEventListener('input', () => {
+                this.updateCharCount();
+                this.toggleSendButton();
+            });
+        }
 
         // New chat
-        document.getElementById('newChatBtn').addEventListener('click', () => {
-            this.startNewChat();
-        });
+        const newChatBtn = document.getElementById('newChatBtn');
+        if (newChatBtn) {
+            newChatBtn.addEventListener('click', () => {
+                this.startNewChat();
+            });
+        }
 
         // Settings
-        document.getElementById('settingsBtn').addEventListener('click', () => {
-            authManager.showAuthModal();
-        });
+        const settingsBtn = document.getElementById('settingsBtn');
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', () => {
+                if (window.authManager) {
+                    authManager.showAuthModal();
+                }
+            });
+        }
 
-        // Sidebar toggle
-        document.getElementById('sidebarToggle').addEventListener('click', () => {
-            this.toggleSidebar();
-        });
+        // Panel toggle
+        const panelToggle = document.getElementById('panelToggle');
+        if (panelToggle) {
+            panelToggle.addEventListener('click', () => {
+                this.togglePanel();
+            });
+        }
 
-        // Close sidebar on mobile when clicking outside
+        // Close panel on mobile when clicking outside
         document.addEventListener('click', (e) => {
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebarToggle');
+            const panel = document.getElementById('leftPanel');
+            const panelToggle = document.getElementById('panelToggle');
             
             if (window.innerWidth <= 768 && 
-                !sidebar.contains(e.target) && 
-                !sidebarToggle.contains(e.target) &&
-                sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
+                panel && panelToggle &&
+                !panel.contains(e.target) && 
+                !panelToggle.contains(e.target) &&
+                panel.classList.contains('open')) {
+                panel.classList.remove('open');
             }
         });
     }
 
     setupTextareaResize() {
         const textarea = document.getElementById('messageInput');
+        if (!textarea) return;
         
         textarea.addEventListener('input', function() {
             this.style.height = 'auto';
@@ -85,6 +182,9 @@ class SonarChat {
     updateCharCount() {
         const messageInput = document.getElementById('messageInput');
         const charCount = document.getElementById('charCount');
+        
+        if (!messageInput || !charCount) return;
+        
         const currentLength = messageInput.value.length;
         
         charCount.textContent = `${currentLength}/4000`;
@@ -102,18 +202,24 @@ class SonarChat {
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
         
+        if (!messageInput || !sendBtn) return;
+        
         sendBtn.disabled = !messageInput.value.trim() || this.isTyping;
     }
 
     updateModelDisplay() {
         const currentModelSpan = document.getElementById('currentModel');
+        if (!currentModelSpan) return;
+        
         const modelName = API_CONFIG.MODELS[this.currentModel];
         currentModelSpan.textContent = modelName;
     }
 
-    toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('open');
+    togglePanel() {
+        const panel = document.getElementById('leftPanel');
+        if (panel) {
+            panel.classList.toggle('open');
+        }
     }
 
     startNewChat() {
@@ -121,11 +227,17 @@ class SonarChat {
         this.currentChatId = this.generateChatId();
         
         // Hide messages container and show welcome message
-        document.getElementById('messagesContainer').style.display = 'none';
-        document.getElementById('welcomeMessage').style.display = 'flex';
+        const messagesContainer = document.getElementById('messagesContainer');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        
+        if (messagesContainer) messagesContainer.style.display = 'none';
+        if (welcomeMessage) welcomeMessage.style.display = 'flex';
         
         // Clear input
-        document.getElementById('messageInput').value = '';
+        const messageInput = document.getElementById('messageInput');
+        if (messageInput) {
+            messageInput.value = '';
+        }
         this.updateCharCount();
         this.toggleSendButton();
         
@@ -139,6 +251,8 @@ class SonarChat {
 
     async sendMessage() {
         const messageInput = document.getElementById('messageInput');
+        if (!messageInput) return;
+        
         const message = messageInput.value.trim();
         
         if (!message || this.isTyping) return;
@@ -164,7 +278,7 @@ class SonarChat {
             // Get AI response
             const response = await this.getAIResponse(message);
             
-            // Add AI response with typing animation
+            // Add AI response with fast typing animation (Claude-like speed)
             await this.addMessageWithTyping('assistant', response);
             
         } catch (error) {
@@ -193,8 +307,11 @@ class SonarChat {
 
         // Hide welcome message and show messages container
         if (this.messages.length === 1) {
-            document.getElementById('welcomeMessage').style.display = 'none';
-            document.getElementById('messagesContainer').style.display = 'block';
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const messagesContainer = document.getElementById('messagesContainer');
+            
+            if (welcomeMessage) welcomeMessage.style.display = 'none';
+            if (messagesContainer) messagesContainer.style.display = 'block';
         }
     }
 
@@ -210,29 +327,42 @@ class SonarChat {
         const messageElement = this.renderMessage(message);
         const messageText = messageElement.querySelector('.message-text');
         
+        if (!messageText) return;
+        
+        // Add thinking indicator first
+        const thinkingDots = document.createElement('div');
+        thinkingDots.className = 'thinking-indicator';
+        thinkingDots.innerHTML = '<span></span><span></span><span></span>';
+        messageText.appendChild(thinkingDots);
+        
+        // Show thinking animation for a brief moment
+        await this.sleep(500);
+        thinkingDots.remove();
+        
         // Add typing cursor
         const cursor = document.createElement('span');
         cursor.className = 'typing-cursor';
         messageText.appendChild(cursor);
 
-        // Type out the message
+        // Type out the message with Claude-like speed (much faster)
         for (let i = 0; i < content.length; i++) {
             message.content += content[i];
-            messageText.textContent = message.content;
+            messageText.innerHTML = this.formatMessage(message.content);
             messageText.appendChild(cursor);
             
             // Scroll to bottom during typing
             this.scrollToBottom();
             
-            // Random delay between characters for realistic typing
-            const delay = Math.random() * 30 + 10;
+            // Much faster typing speed like Claude (1-4ms delay)
+            const delay = Math.random() * 3 + 1;
             await this.sleep(delay);
         }
 
         // Remove cursor
         cursor.remove();
         
-        // Final scroll
+        // Final formatting and scroll
+        messageText.innerHTML = this.formatMessage(message.content);
         this.scrollToBottom();
     }
 
@@ -242,13 +372,14 @@ class SonarChat {
 
     renderMessage(message) {
         const messagesContainer = document.getElementById('messagesContainer');
+        if (!messagesContainer) return null;
         
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${message.role}`;
         messageDiv.dataset.messageId = message.id;
 
         const avatar = message.role === 'user' ? 
-            (authManager.currentUser?.displayName?.charAt(0) || 'U') : 'AI';
+            (window.authManager?.currentUser?.displayName?.charAt(0) || 'U') : 'AI';
 
         messageDiv.innerHTML = `
             <div class="message-content">
@@ -277,7 +408,9 @@ class SonarChat {
 
     scrollToBottom() {
         const chatContainer = document.getElementById('chatContainer');
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
     }
 
     async getAIResponse(message) {
@@ -286,7 +419,7 @@ class SonarChat {
             messages: [
                 {
                     role: "system",
-                    content: "You are Sonar AI, a helpful and intelligent assistant. Provide clear, accurate, and helpful responses."
+                    content: "You are At41rv AI, a helpful and intelligent assistant. Provide clear, accurate, and helpful responses."
                 },
                 ...this.messages.slice(-10).map(msg => ({
                     role: msg.role,
@@ -351,14 +484,14 @@ class SonarChat {
         }
 
         // Save to localStorage
-        localStorage.setItem('sonar_chat_history', JSON.stringify(this.chatHistory));
+        localStorage.setItem('at41rv_chat_history', JSON.stringify(this.chatHistory));
         
         // Update UI
         this.updateChatHistoryUI();
     }
 
     loadChatHistory() {
-        const saved = localStorage.getItem('sonar_chat_history');
+        const saved = localStorage.getItem('at41rv_chat_history');
         if (saved) {
             try {
                 this.chatHistory = JSON.parse(saved);
@@ -375,8 +508,8 @@ class SonarChat {
         
         const firstUserMessage = this.messages.find(msg => msg.role === 'user');
         if (firstUserMessage) {
-            let title = firstUserMessage.content.substring(0, 50);
-            if (firstUserMessage.content.length > 50) {
+            let title = firstUserMessage.content.substring(0, 40);
+            if (firstUserMessage.content.length > 40) {
                 title += '...';
             }
             return title;
@@ -386,8 +519,10 @@ class SonarChat {
     }
 
     updateChatHistoryUI() {
-        const chatHistoryContainer = document.getElementById('chatHistory');
-        chatHistoryContainer.innerHTML = '';
+        const chatList = document.getElementById('chatList');
+        if (!chatList) return;
+        
+        chatList.innerHTML = '';
 
         this.chatHistory.forEach(chat => {
             const chatItem = document.createElement('div');
@@ -403,7 +538,7 @@ class SonarChat {
                 this.loadChat(chat.id);
             });
 
-            chatHistoryContainer.appendChild(chatItem);
+            chatList.appendChild(chatItem);
         });
     }
 
@@ -413,16 +548,23 @@ class SonarChat {
 
         this.currentChatId = chatId;
         this.messages = [...chat.messages];
-        this.currentModel = chat.model || "sonar(clinesp)";
+        this.currentModel = chat.model || "gpt-4o-search-preview(clinesp)";
 
-        // Update model selector
-        document.getElementById('modelSelect').value = this.currentModel;
+        // Update model display and grid
         this.updateModelDisplay();
+        this.updateModelGrid();
 
         // Clear and render messages
-        document.getElementById('messagesContainer').innerHTML = '';
-        document.getElementById('welcomeMessage').style.display = 'none';
-        document.getElementById('messagesContainer').style.display = 'block';
+        const messagesContainer = document.getElementById('messagesContainer');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        
+        if (messagesContainer) {
+            messagesContainer.innerHTML = '';
+            messagesContainer.style.display = 'block';
+        }
+        if (welcomeMessage) {
+            welcomeMessage.style.display = 'none';
+        }
 
         this.messages.forEach(message => {
             this.renderMessage(message);
@@ -431,21 +573,27 @@ class SonarChat {
         this.scrollToBottom();
         this.updateChatHistoryUI();
 
-        // Close sidebar on mobile
+        // Close panel on mobile
         if (window.innerWidth <= 768) {
-            document.getElementById('sidebar').classList.remove('open');
+            const leftPanel = document.getElementById('leftPanel');
+            if (leftPanel) {
+                leftPanel.classList.remove('open');
+            }
         }
     }
 }
 
 // Initialize the chat application
 document.addEventListener('DOMContentLoaded', () => {
-    window.sonarChat = new SonarChat();
+    window.at41rvChat = new At41rvChat();
 });
 
 // Handle window resize
 window.addEventListener('resize', () => {
     if (window.innerWidth > 768) {
-        document.getElementById('sidebar').classList.remove('open');
+        const leftPanel = document.getElementById('leftPanel');
+        if (leftPanel) {
+            leftPanel.classList.remove('open');
+        }
     }
 });
