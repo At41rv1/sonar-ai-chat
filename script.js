@@ -157,23 +157,18 @@ class SonarChat {
         this.updateCharCount();
         this.toggleSendButton();
 
-        // Show loading
-        this.showLoading();
+        // Set typing state
         this.isTyping = true;
 
         try {
             // Get AI response
             const response = await this.getAIResponse(message);
             
-            // Hide loading
-            this.hideLoading();
-            
             // Add AI response with typing animation
             await this.addMessageWithTyping('assistant', response);
             
         } catch (error) {
             console.error('Error getting AI response:', error);
-            this.hideLoading();
             this.addMessage('assistant', 'Sorry, I encountered an error while processing your request. Please try again.');
         }
 
@@ -283,14 +278,6 @@ class SonarChat {
     scrollToBottom() {
         const chatContainer = document.getElementById('chatContainer');
         chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    showLoading() {
-        document.getElementById('loadingOverlay').style.display = 'flex';
-    }
-
-    hideLoading() {
-        document.getElementById('loadingOverlay').style.display = 'none';
     }
 
     async getAIResponse(message) {
