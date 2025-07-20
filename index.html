@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sonar AI Chat</title>
+    <title>At41rv AI Chat</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
+        <!-- Left Panel with Model Selection -->
+        <div class="left-panel" id="leftPanel">
+            <div class="panel-header">
                 <div class="logo-container">
-                    <img src="https://i.postimg.cc/LsxX0p4L/cropped-circle-image.png" alt="Sonar Logo" class="logo">
-                    <h2>Sonar AI</h2>
+                    <img src="https://i.postimg.cc/LsxX0p4L/cropped-circle-image.png" alt="At41rv Logo" class="logo">
+                    <h2>At41rv AI</h2>
                 </div>
                 <button class="new-chat-btn" id="newChatBtn">
                     <i class="fas fa-plus"></i>
@@ -22,20 +22,21 @@
                 </button>
             </div>
             
-            <div class="chat-history" id="chatHistory">
-                <!-- Chat history will be populated here -->
+            <div class="model-selection-section">
+                <h3>AI Models</h3>
+                <div class="model-grid" id="modelGrid">
+                    <!-- Model cards will be populated here -->
+                </div>
             </div>
             
-            <div class="sidebar-footer">
-                <div class="model-selector">
-                    <label for="modelSelect">AI Model:</label>
-                    <select id="modelSelect" class="model-dropdown">
-                        <option value="sonar(clinesp)">Sonar (Clinesp)</option>
-                        <option value="groq/moonshotai/kimi-k2-instruct">Kimi K2 Instruct</option>
-                        <option value="sonar-reasoning-pro(clinesp)">Sonar Reasoning Pro</option>
-                        <option value="sonar-reasoning(clinesp)">Sonar Reasoning</option>
-                    </select>
+            <div class="chat-history" id="chatHistory">
+                <h3>Recent Chats</h3>
+                <div class="chat-list" id="chatList">
+                    <!-- Chat history will be populated here -->
                 </div>
+            </div>
+            
+            <div class="panel-footer">
                 <button class="settings-btn" id="settingsBtn">
                     <i class="fas fa-cog"></i>
                     Settings
@@ -46,9 +47,13 @@
         <!-- Main Chat Area -->
         <div class="main-content">
             <div class="chat-header">
-                <button class="sidebar-toggle" id="sidebarToggle">
+                <button class="panel-toggle" id="panelToggle">
                     <i class="fas fa-bars"></i>
                 </button>
+                <div class="current-model-display">
+                    <span class="model-label">Model:</span>
+                    <span id="currentModel">GPT-4o Search Preview</span>
+                </div>
                 <div class="user-info" id="userInfo">
                     <span id="userEmail">Not logged in</span>
                     <button class="login-btn" id="loginBtn">Login</button>
@@ -58,11 +63,32 @@
             <div class="chat-container" id="chatContainer">
                 <div class="welcome-message" id="welcomeMessage">
                     <div class="welcome-content">
-                        <img src="https://i.postimg.cc/LsxX0p4L/cropped-circle-image.png" alt="Sonar Logo" class="welcome-logo">
-                        <h1>Welcome to Sonar AI</h1>
-                        <p>Your intelligent AI assistant powered by advanced language models</p>
-                        <div class="model-info">
-                            <p>Current Model: <span id="currentModel">Sonar (Clinesp)</span></p>
+                        <div class="welcome-icon">
+                            <img src="https://i.postimg.cc/LsxX0p4L/cropped-circle-image.png" alt="At41rv Logo" class="welcome-logo">
+                        </div>
+                        <h1>Welcome to At41rv AI</h1>
+                        <p>Your advanced AI assistant powered by the latest language models</p>
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <i class="fas fa-brain"></i>
+                                <h4>Advanced Reasoning</h4>
+                                <p>Complex problem solving and analysis</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-code"></i>
+                                <h4>Code Generation</h4>
+                                <p>Write, debug, and explain code</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-search"></i>
+                                <h4>Web Search</h4>
+                                <p>Real-time information retrieval</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-language"></i>
+                                <h4>Multilingual</h4>
+                                <p>Communicate in multiple languages</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -76,7 +102,7 @@
                 <div class="input-wrapper">
                     <textarea 
                         id="messageInput" 
-                        placeholder="Message Sonar AI..." 
+                        placeholder="Message At41rv AI..." 
                         rows="1"
                         maxlength="4000"
                     ></textarea>
@@ -86,7 +112,7 @@
                 </div>
                 <div class="input-footer">
                     <span class="char-count" id="charCount">0/4000</span>
-                    <span class="disclaimer">Sonar AI can make mistakes. Consider checking important information.</span>
+                    <span class="disclaimer">At41rv AI can make mistakes. Consider checking important information.</span>
                 </div>
             </div>
         </div>
