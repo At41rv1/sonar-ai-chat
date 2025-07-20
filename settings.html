@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Sonar AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: white;
+            min-height: 100vh;
+        }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .back-btn {
+            padding: 8px 12px;
+            background-color: #f3f4f6;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #374151;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #e5e7eb;
+        }
+
+        .settings-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .settings-section {
+            margin-bottom: 40px;
+            padding: 24px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background-color: #fafafa;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 16px;
+        }
+
+        .section-description {
+            color: #6b7280;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #10a37f;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .profile-info h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .profile-info p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .auth-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: #10a37f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0d8f6f;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f9fafb;
+        }
+
+        .btn-danger {
+            background-color: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .login-prompt h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .login-prompt p {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .model-settings {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .model-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .model-option:last-child {
+            border-bottom: none;
+        }
+
+        .model-info h4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .model-info p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .model-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .status-available {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .data-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .data-item:last-child {
+            border-bottom: none;
+        }
+
+        .data-label {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .data-value {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .settings-container {
+                padding: 20px 16px;
+            }
+
+            .settings-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .user-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .auth-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings-header">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Chat
+            </a>
+            <h1 class="settings-title">Settings</h1>
+        </div>
+
+        <!-- Account Section -->
+        <div class="settings-section">
+            <h2 class="section-title">Account</h2>
+            <p class="section-description">
+                Manage your account settings and authentication preferences.
+            </p>
+            
+            <div id="userSection">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- AI Models Section -->
+        <div class="settings-section">
+            <h2 class="section-title">AI Models</h2>
+            <p class="section-description">
+                Available AI models for your conversations. You can switch between models in the main chat interface.
+            </p>
+            
+            <div class="model-settings">
+                <div class="model-option">
+                    <div class="model-info">
+                        <h4>Sonar (Clinesp)</h4>
+                        <p>Advanced reasoning and code understanding</p>
+                    </div>
+                    <span class="model-status status-active">Active</span>
+                </div>
+                
+                <div class="model-option">
+                    <div class="model-info">
+                        <h4>Kimi K2 Instruct</h4>
+                        <p>Optimized for instruction following</p>
+                    </div>
+                    <span class="model-status status-available">Available</span>
+                </div>
+                
+                <div class="model-option">
+                    <div class="model-info">
+                        <h4>Sonar Reasoning Pro</h4>
+                        <p>Enhanced logical reasoning capabilities</p>
+                    </div>
+                    <span class="model-status status-available">Available</span>
+                </div>
+                
+                <div class="model-option">
+                    <div class="model-info">
+                        <h4>Sonar Reasoning</h4>
+                        <p>Standard reasoning model</p>
+                    </div>
+                    <span class="model-status status-available">Available</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data & Privacy Section -->
+        <div class="settings-section">
+            <h2 class="section-title">Data & Privacy</h2>
+            <p class="section-description">
+                Information about your data usage and privacy settings.
+            </p>
+            
+            <div class="data-section">
+                <div class="data-item">
+                    <span class="data-label">Chat History Storage</span>
+                    <span class="data-value">Local Browser Only</span>
+                </div>
+                
+                <div class="data-item">
+                    <span class="data-label">Data Encryption</span>
+                    <span class="data-value">HTTPS/TLS</span>
+                </div>
+                
+                <div class="data-item">
+                    <span class="data-label">Third-party Sharing</span>
+                    <span class="data-value">None</span>
+                </div>
+                
+                <div class="data-item">
+                    <span class="data-label">Chat Retention</span>
+                    <span class="data-value">Until Manually Deleted</span>
+                </div>
+            </div>
+            
+            <div class="auth-actions">
+                <button class="btn btn-danger" onclick="clearAllData()">
+                    <i class="fas fa-trash"></i>
+                    Clear All Chat Data
+                </button>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="settings-section">
+            <h2 class="section-title">About Sonar AI</h2>
+            <p class="section-description">
+                Sonar AI is an intelligent chatbot powered by advanced language models. 
+                Built with modern web technologies and designed for seamless conversations.
+            </p>
+            
+            <div class="data-section">
+                <div class="data-item">
+                    <span class="data-label">Version</span>
+                    <span class="data-value">1.0.0</span>
+                </div>
+                
+                <div class="data-item">
+                    <span class="data-label">API Provider</span>
+                    <span class="data-value">SamuraiAPI</span>
+                </div>
+                
+                <div class="data-item">
+                    <span class="data-label">Authentication</span>
+                    <span class="data-value">Firebase Auth</span>
+                </div>
+                
+                <div class="data-item">
+                    <span class="data-label">Last Updated</span>
+                    <span class="data-value" id="lastUpdated">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    
+    <script>
+        // Settings page specific functionality
+        class SettingsPage {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.updateLastUpdated();
+                this.setupUserSection();
+                
+                // Listen for auth state changes
+                if (window.authManager) {
+                    // Wait for auth manager to initialize
+                    setTimeout(() => {
+                        this.updateUserSection();
+                    }, 1000);
+                }
+            }
+
+            updateLastUpdated() {
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
+            }
+
+            setupUserSection() {
+                // Check auth state periodically
+                setInterval(() => {
+                    this.updateUserSection();
+                }, 1000);
+            }
+
+            updateUserSection() {
+                const userSection = document.getElementById('userSection');
+                const user = window.authManager?.currentUser;
+
+                if (user) {
+                    userSection.innerHTML = `
+                        <div class="user-profile">
+                            <div class="profile-avatar">
+                                ${user.photoURL ? 
+                                    `<img src="${user.photoURL}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` :
+                                    (user.displayName?.charAt(0) || user.email?.charAt(0) || 'U')
+                                }
+                            </div>
+                            <div class="profile-info">
+                                <h3>${user.displayName || 'User'}</h3>
+                                <p>${user.email}</p>
+                                <p style="font-size: 12px; color: #9ca3af;">
+                                    Signed in via ${user.providerData[0]?.providerId === 'google.com' ? 'Google' : 'Email'}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="auth-actions">
+                            <button class="btn btn-danger" onclick="signOutUser()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Sign Out
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    userSection.innerHTML = `
+                        <div class="login-prompt">
+                            <h3>Not Signed In</h3>
+                            <p>Sign in to sync your chat history across devices and access additional features.</p>
+                            <div class="auth-actions">
+                                <button class="btn btn-primary" onclick="showLogin()">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Sign In
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Global functions
+        function showLogin() {
+            if (window.authManager) {
+                window.authManager.showAuthModal();
+            }
+        }
+
+        function signOutUser() {
+            if (window.authManager) {
+                if (confirm('Are you sure you want to sign out?')) {
+                    window.authManager.signOut();
+                }
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all chat data? This action cannot be undone.')) {
+                localStorage.removeItem('sonar_chat_history');
+                localStorage.removeItem('sonar_user');
+                alert('All chat data has been cleared.');
+                
+                // Redirect to main page
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Initialize settings page
+        document.addEventListener('DOMContentLoaded', () => {
+            new SettingsPage();
+        });
+    </script>
+</body>
+</html>
