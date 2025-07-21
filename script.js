@@ -333,12 +333,13 @@ class At41rvChat {
         messageDiv.className = `message ${message.role}`;
         messageDiv.dataset.messageId = message.id;
 
-        const avatar = message.role === 'user' ? 
-            (window.authManager?.currentUser?.displayName?.charAt(0) || 'U') : 'AI';
+        const userAvatar = window.authManager?.currentUser?.displayName?.charAt(0) || 
+                          window.authManager?.currentUser?.email?.charAt(0) || 'U';
+        const avatar = message.role === 'user' ? userAvatar : 'AI';
 
         messageDiv.innerHTML = `
-            <div class="message-content">
-                <div class="message-avatar">${avatar}</div>
+            <div class="message-avatar">${avatar}</div>
+            <div class="message-bubble">
                 <div class="message-text">${this.formatMessage(message.content)}</div>
             </div>
         `;
