@@ -317,54 +317,8 @@ class At41rvChat {
     }
 
     async addMessageWithTyping(role, content) {
-        const message = {
-            id: Date.now(),
-            role: role,
-            content: '',
-            timestamp: new Date().toISOString()
-        };
-
-        this.messages.push(message);
-        const messageElement = this.renderMessage(message);
-        const messageText = messageElement.querySelector('.message-text');
-        
-        if (!messageText) return;
-        
-        // Add thinking indicator first
-        const thinkingDots = document.createElement('div');
-        thinkingDots.className = 'thinking-indicator';
-        thinkingDots.innerHTML = '<span></span><span></span><span></span>';
-        messageText.appendChild(thinkingDots);
-        
-        // Show thinking animation for a brief moment
-        await this.sleep(500);
-        thinkingDots.remove();
-        
-        // Add typing cursor
-        const cursor = document.createElement('span');
-        cursor.className = 'typing-cursor';
-        messageText.appendChild(cursor);
-
-        // Type out the message with Claude-like speed (much faster)
-        for (let i = 0; i < content.length; i++) {
-            message.content += content[i];
-            messageText.innerHTML = this.formatMessage(message.content);
-            messageText.appendChild(cursor);
-            
-            // Scroll to bottom during typing
-            this.scrollToBottom();
-            
-            // Much faster typing speed like Claude (1-4ms delay)
-            const delay = Math.random() * 0 + 0.2;
-            await this.sleep(delay);
-        }
-
-        // Remove cursor
-        cursor.remove();
-        
-        // Final formatting and scroll
-        messageText.innerHTML = this.formatMessage(message.content);
-        this.scrollToBottom();
+        // Removed typing animation - messages appear instantly
+        this.addMessage(role, content);
     }
 
     sleep(ms) {
