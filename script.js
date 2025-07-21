@@ -1,3 +1,4 @@
+
 class At41rvChat {
     constructor() {
         this.currentModel = "chatgpt-4o-latest(clinesp)";
@@ -354,7 +355,7 @@ class At41rvChat {
             this.scrollToBottom();
             
             // Much faster typing speed like Claude (1-4ms delay)
-            const delay = Math.random() * 3 + 1;
+            const delay = Math.random() * 0 + 0.2;
             await this.sleep(delay);
         }
 
