@@ -279,8 +279,8 @@ class At41rvChat {
             // Get AI response
             const response = await this.getAIResponse(message);
             
-            // Add AI response with fast typing animation (Claude-like speed)
-            await this.addMessageWithTyping('assistant', response);
+            // Add AI response instantly without animation
+            this.addMessage('assistant', response);
             
         } catch (error) {
             console.error('Error getting AI response:', error);
